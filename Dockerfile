@@ -1,18 +1,16 @@
-FROM underworldcode/uwgeodynamics:v2.8.5
+# Please choose your required Underworld/UWGeo image version here.
+# Available images may be found at
+#   https://hub.docker.com/r/underworldcode/underworld2/tags
+#   https://hub.docker.com/r/underworldcode/uwgeodynamics/tags
+FROM underworldcode/underworld2:2.8.1b
 
-# ARGS for following setup
-ARG NB_USER=jovyan
-ARG NB_UID=1000
-ARG NB_SPACE=${NB_WORK}/userspace
+# THE FOLLOWING WILL USUALLY NOT REQUIRE MODIFICATION.
 
-# copy files into ${NB_SPACE}, unfortunately must be root to COPY
-USER root
-RUN mkdir -p ${NB_SPACE}
-COPY . ${NB_SPACE}
-RUN chown -R ${NB_UID}:users ${NB_SPACE}
+# This command will copy in all the files in your repo.
+COPY --chown=jovyan:users . /home/jovyan/community_model
 
-# nominate ${NB_SPACE} as a volume
-VOLUME ${NB_SPACE}
+# Set working directory to where we've put files. 
+WORKDIR /home/jovyan/community_model
 
-# switch to $NB_USER
-USER ${NB_USER}
+# Create symbolic link to documentation. 
+RUN ln -s .. underworld_documentation
